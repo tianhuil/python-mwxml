@@ -45,6 +45,8 @@ def map(process, paths, threads=None):
 
     def process_path(path):
         dump = Dump.from_file(mwtypes.files.reader(path))
-        yield from process(dump, path)
+        for x in process(dump, path):
+            yield x
 
-    yield from para.map(process_path, paths, mappers=threads)
+    for x in para.map(process_path, paths, mappers=threads):
+        yield x
