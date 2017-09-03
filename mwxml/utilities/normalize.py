@@ -1,4 +1,4 @@
-r"""
+ur"""
 ``$ mwxml normalize -h``
 ::
 
@@ -24,6 +24,7 @@ r"""
                             mess when running multi-threaded.
         --debug             Print debug logs.
 """
+from __future__ import absolute_import
 import sys
 
 import mwcli
@@ -33,43 +34,43 @@ def normalize(rev_docs, verbose=False):
 
     for rev_doc in rev_docs:
         changed = False
-        if 'page' in rev_doc:
+        if u'page' in rev_doc:
             # Converts page.redirect_title to page.redirect
-            if 'redirect_title' in rev_doc['page']:
-                rev_doc['page']['redirect'] = rev_doc['page']['redirect_title']
-                del rev_doc['page']['redirect_title']
+            if u'redirect_title' in rev_doc[u'page']:
+                rev_doc[u'page'][u'redirect'] = rev_doc[u'page'][u'redirect_title']
+                del rev_doc[u'page'][u'redirect_title']
                 changed = True
 
             # Converts page.redirect.title to page.redirect
-            if 'redirect' in rev_doc['page'] and \
-               isinstance(rev_doc['page']['redirect'], dict) and \
-               'title' in rev_doc['page']['redirect']:
+            if u'redirect' in rev_doc[u'page'] and \
+               isinstance(rev_doc[u'page'][u'redirect'], dict) and \
+               u'title' in rev_doc[u'page'][u'redirect']:
 
-                rev_doc['page']['redirect'] = \
-                    rev_doc['page']['redirect']['title']
+                rev_doc[u'page'][u'redirect'] = \
+                    rev_doc[u'page'][u'redirect'][u'title']
 
                 # No deletion necessary since we're replacing the old key
                 changed = True
 
-        if 'contributor' in rev_doc:
-            contributor_doc = rev_doc['contributor'] or {}
+        if u'contributor' in rev_doc:
+            contributor_doc = rev_doc[u'contributor'] or {}
             user_doc = {}
-            if 'id' in contributor_doc:
-                user_doc['id'] = contributor_doc['id']
-            if 'user_text' in contributor_doc:
-                user_doc['text'] = contributor_doc['user_text']
+            if u'id' in contributor_doc:
+                user_doc[u'id'] = contributor_doc[u'id']
+            if u'user_text' in contributor_doc:
+                user_doc[u'text'] = contributor_doc[u'user_text']
 
-            rev_doc['user'] = user_doc
-            del rev_doc['contributor']
+            rev_doc[u'user'] = user_doc
+            del rev_doc[u'contributor']
             changed = True
 
         changed = trim_dict(rev_doc) or changed
 
         if verbose:
             if changed:
-                sys.stderr.write("!")
+                sys.stderr.write(u"!")
             else:
-                sys.stderr.write(".")
+                sys.stderr.write(u".")
             sys.stderr.flush()
 
         yield rev_doc

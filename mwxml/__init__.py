@@ -1,4 +1,4 @@
-"""
+u"""
 This library contains a collection of utilities for efficiently processing
 MediaWiki's XML database dumps.  There are two important concerns that this
 module intends to address: *performance* and the *complexity* of streaming
@@ -25,6 +25,7 @@ XML parsing.
     :mod:`multiprocessing` to distribute the work over multiple CPUS
 
 """
+from __future__ import absolute_import
 from .map import map
 from .iteration import Dump, Page, LogItem, Revision, SiteInfo, Namespace
 from .about import (__name__, __version__, __author__, __author_email__,

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import sys
 from xml.etree import ElementTree
 
@@ -5,16 +6,16 @@ from more_itertools import peekable
 
 
 def strip_tag(tag):
-    return tag.split("}")[1]
+    return tag.split(u"}")[1]
 
-class Dump:
-    __slots__ = ('siteinfo', 'pages')
+class Dump(object):
+    __slots__ = (u'siteinfo', u'pages')
 
     def __init__(self, siteinfo=None, pages=None):
         self.siteinfo = siteinfo
 
         if pages is None:
-            self.pages = range(0)
+            self.pages = xrange(0)
         else:
             self.pages = pages
 
@@ -23,8 +24,8 @@ class Dump:
 
     @classmethod
     def from_events(cls, events):
-        event, elem = next(events)
-        assert event == "start" and strip_tag(elem.tag) == "mediawiki"
+        event, elem = events.next()
+        assert event == u"start" and strip_tag(elem.tag) == u"mediawiki"
 
 
         kwargs = {}
@@ -32,69 +33,69 @@ class Dump:
             event, elem = events.peek()
 
             # Inner loop stuff
-            if event == "start" and strip_tag(elem.tag) == "siteinfo":
-                kwargs['siteinfo'] = SiteInfo.from_events(events)
-            elif event == "end" and strip_tag(elem.tag) == "siteinfo":
+            if event == u"start" and strip_tag(elem.tag) == u"siteinfo":
+                kwargs[u'siteinfo'] = SiteInfo.from_events(events)
+            elif event == u"end" and strip_tag(elem.tag) == u"siteinfo":
                 #kwargs['pages'] = Page.read_from(events)
-                next(event)
+                event.next()
                 break
             else:
-                next(event)
+                event.next()
 
         return cls(**kwargs)
 
     @classmethod
     def from_file(cls, f):
-        events = ElementTree.iterparse(f, events=('start', 'end'));
+        events = ElementTree.iterparse(f, events=(u'start', u'end'));
 
         return cls.from_events(peekable(events))
 
 
 
-class SiteInfo:
-    __slots__ = ('sitename', 'dbname', 'base', 'generator', 'case',
-                 'namespaces')
+class SiteInfo(object):
+    __slots__ = (u'sitename', u'dbname', u'base', u'generator', u'case',
+                 u'namespaces')
 
     def __init__(self, sitename=None, dbname=None, base=None, generator=None,
                        case=None, namespaces=None):
-        self.sitename = str(sitename) if sitename is not None else None
-        self.base = str(base) if base is not None else None
-        self.dbname = str(dbname) if dbname is not None else None
-        self.generator = str(generator) if generator is not None else None
-        self.case = str(case) if case is not None else None
+        self.sitename = unicode(sitename) if sitename is not None else None
+        self.base = unicode(base) if base is not None else None
+        self.dbname = unicode(dbname) if dbname is not None else None
+        self.generator = unicode(generator) if generator is not None else None
+        self.case = unicode(case) if case is not None else None
         self.namespaces = namespaces
 
     @classmethod
     def from_events(cls, events):
-        event, elem = next(events)
-        assert event == "start" and strip_tag(elem.tag) == "siteinfo"
+        event, elem = events.next()
+        assert event == u"start" and strip_tag(elem.tag) == u"siteinfo"
 
         kwargs = {}
         while events:
             event, elem = events.peek()
 
-            if event == "end":
-                if strip_tag(elem.tag) == "sitename":
-                    kwargs['sitename'] = elem.text
-                elif strip_tag(elem.tag) == "dbname":
-                    kwargs['dbname'] = elem.text
-                elif strip_tag(elem.tag) == "base":
-                    kwargs['base'] = elem.text
-                elif strip_tag(elem.tag) == "generator":
-                    kwargs['generator'] = elem.text
-                elif strip_tag(elem.tag) == "case":
-                    kwargs['case'] = elem.text
+            if event == u"end":
+                if strip_tag(elem.tag) == u"sitename":
+                    kwargs[u'sitename'] = elem.text
+                elif strip_tag(elem.tag) == u"dbname":
+                    kwargs[u'dbname'] = elem.text
+                elif strip_tag(elem.tag) == u"base":
+                    kwargs[u'base'] = elem.text
+                elif strip_tag(elem.tag) == u"generator":
+                    kwargs[u'generator'] = elem.text
+                elif strip_tag(elem.tag) == u"case":
+                    kwargs[u'case'] = elem.text
 
-                next(events)
+                events.next()
 
-            elif event == "start" and strip_tag(elem.tag) == "namespaces":
-                kwargs['namespaces'] = Namespaces.from_events(events)
+            elif event == u"start" and strip_tag(elem.tag) == u"namespaces":
+                kwargs[u'namespaces'] = Namespaces.from_events(events)
 
-            elif event == "end" and strip_tag(elem.tag) == "siteinfo":
-                next(events)
+            elif event == u"end" and strip_tag(elem.tag) == u"siteinfo":
+                events.next()
                 break
             else:
-                next(events)
+                events.next()
 
         return cls(**kwargs)
 
@@ -104,51 +105,51 @@ class SiteInfo:
 class Namespaces(list):
 
     def init(self, namespaces):
-        super().__init__(namespace)
+        super(Namespaces, self).__init__(namespace)
 
     @classmethod
     def from_events(cls, events):
-        event, elem = next(events)
-        assert event == "start" and strip_tag(elem.tag) == "namespaces"
+        event, elem = events.next()
+        assert event == u"start" and strip_tag(elem.tag) == u"namespaces"
 
         namespaces = cls()
         while events:
             event, elem = events.peek()
 
             # Inner tag stuff
-            if event == "start" and strip_tag(elem.tag) == "namespace":
+            if event == u"start" and strip_tag(elem.tag) == u"namespace":
                 namespaces.append(Namespace.from_events(events))
-            elif event == "end" and strip_tag(elem.tag) == "namespaces":
-                next(events)
+            elif event == u"end" and strip_tag(elem.tag) == u"namespaces":
+                events.next()
                 break
             else:
-                next(events)
+                events.next()
 
         return namespaces
 
 
-class Namespace:
-    __slots__ = ('key', 'case', 'text')
+class Namespace(object):
+    __slots__ = (u'key', u'case', u'text')
 
     def __init__(self, key=None, case=None, text=None):
         self.key = int(key) if key is not None else None
-        self.case = str(case) if case is not None else None
-        self.text = str(text) if text is not None else None
+        self.case = unicode(case) if case is not None else None
+        self.text = unicode(text) if text is not None else None
 
     @classmethod
     def from_events(cls, events):
-        event, elem = next(events)
-        assert event == "start" and strip_tag(elem.tag) == "namespace"
+        event, elem = events.next()
+        assert event == u"start" and strip_tag(elem.tag) == u"namespace"
 
-        event, elem = next(events)
-        assert event == "end" and strip_tag(elem.tag) == "namespace"
+        event, elem = events.next()
+        assert event == u"end" and strip_tag(elem.tag) == u"namespace"
 
         return cls(
-            elem.attrib.get('key'),
-            elem.attrib.get('case'),
+            elem.attrib.get(u'key'),
+            elem.attrib.get(u'case'),
             elem.text
         )
 
 dump = Dump.from_file(sys.stdin)
 for ns in dump.siteinfo.namespaces:
-    print(ns.key)
+    print ns.key

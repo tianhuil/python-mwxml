@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import jsonable
 from mwtypes.util import none_or
 
@@ -5,7 +6,7 @@ from .namespace import Namespace
 
 
 class SiteInfo(jsonable.Type):
-    """
+    u"""
     Represents the data from the <siteinfo> in a MediaWiki XML dump.
 
     .. autoattribute:: mwxml.iteration.site_info.SiteInfo.name
@@ -27,38 +28,38 @@ class SiteInfo(jsonable.Type):
         :annotation: = list(mwxml.Namespace) | None
 
     """
-    __slots__ = ('name', 'dbname', 'base', 'generator', 'case', 'namespaces')
+    __slots__ = (u'name', u'dbname', u'base', u'generator', u'case', u'namespaces')
 
     def initialize(self, name=None, dbname=None, base=None, generator=None,
                    case=None, namespaces=None):
 
-        self.name = none_or(name, str)
-        """
+        self.name = none_or(name, unicode)
+        u"""
         The name of the site. : str | `None`
         """
 
-        self.dbname = none_or(dbname, str)
-        """
+        self.dbname = none_or(dbname, unicode)
+        u"""
         The dbname of the site. : str | `None`
         """
 
-        self.base = none_or(base, str)
-        """
+        self.base = none_or(base, unicode)
+        u"""
         TODO: ??? : str | `None`
         """
 
-        self.generator = none_or(generator, str)
-        """
+        self.generator = none_or(generator, unicode)
+        u"""
         TODO: ??? : str | `None`
         """
 
-        self.case = none_or(case, str)
-        """
+        self.case = none_or(case, unicode)
+        u"""
         TODO: ??? : str | `None`
         """
 
         self.namespaces = none_or(namespaces, list)
-        """
+        u"""
         A list of :class:`mwtypes.Namespace` | `None`
         """
 
@@ -68,17 +69,17 @@ class SiteInfo(jsonable.Type):
         for sub_element in element:
             tag = sub_element.tag
 
-            if tag == "namespace":
+            if tag == u"namespace":
                 namespace = Namespace.from_element(sub_element)
                 namespaces.append(namespace)
             else:
-                assert False, "This should never happen"
+                assert False, u"This should never happen"
 
         return namespaces
 
     @classmethod
     def from_element(cls, element):
-        assert element.tag == "siteinfo", element.tag
+        assert element.tag == u"siteinfo", element.tag
         name = None
         dbname = None
         base = None
@@ -87,19 +88,19 @@ class SiteInfo(jsonable.Type):
         namespaces = None
 
         for sub_element in element:
-            if sub_element.tag == 'sitename':
+            if sub_element.tag == u'sitename':
                 name = sub_element.text
-            elif sub_element.tag == 'dbname':
+            elif sub_element.tag == u'dbname':
                 dbname = sub_element.text
-            elif sub_element.tag == 'base':
+            elif sub_element.tag == u'base':
                 base = sub_element.text
-            elif sub_element.tag == 'base':
+            elif sub_element.tag == u'base':
                 base = sub_element.text
-            elif sub_element.tag == 'generator':
+            elif sub_element.tag == u'generator':
                 generator = sub_element.text
-            elif sub_element.tag == 'case':
+            elif sub_element.tag == u'case':
                 case = sub_element.text
-            elif sub_element.tag == 'namespaces':
+            elif sub_element.tag == u'namespaces':
                 namespaces = cls.load_namespaces(sub_element)
 
         return cls(name=name, dbname=dbname, base=base, generator=generator,

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from nose.tools import eq_
 
 from ...element_iterator import ElementIterator
@@ -6,7 +7,7 @@ from ..page import Page
 
 
 def test_page():
-    XML = """
+    XML = u"""
     <page>
         <title>AccessibleComputing</title>
         <ns>0</ns>
@@ -44,21 +45,21 @@ def test_page():
     """
     page = Page.from_element(ElementIterator.from_string(XML))
     eq_(page.id, 10)
-    eq_(page.title, "AccessibleComputing")
+    eq_(page.title, u"AccessibleComputing")
     eq_(page.namespace, 0)
-    eq_(page.redirect, "Computer accessibility")
+    eq_(page.redirect, u"Computer accessibility")
     eq_(page.restrictions, [])  # Should be known to be empty
 
-    revision = next(page)
+    revision = page.next()
     eq_(revision.id, 233192)
     eq_(revision.page, page)
 
-    revision = next(page)
+    revision = page.next()
     eq_(revision.id, 862220)
 
 
 def test_old_page():
-    XML = """
+    XML = u"""
     <page>
         <title>Talk:AccessibleComputing</title>
         <id>10</id>
@@ -79,12 +80,12 @@ def test_old_page():
     </page>
     """
     page = Page.from_element(ElementIterator.from_string(XML),
-                             {"Talk": Namespace(1, "Talk")})
+                             {u"Talk": Namespace(1, u"Talk")})
     eq_(page.namespace, 1)
 
 
 def test_page_with_discussion():
-    XML = """
+    XML = u"""
     <page>
         <title>Talk:AccessibleComputing</title>
         <ns>90</ns>
@@ -118,8 +119,8 @@ def test_page_with_discussion():
     </page>
     """
     page = Page.from_element(ElementIterator.from_string(XML),
-                             {"Talk": Namespace(1, "Talk")})
+                             {u"Talk": Namespace(1, u"Talk")})
     eq_(page.namespace, 1)
 
-    revision = next(page)
+    revision = page.next()
     eq_(revision.id, 862220)

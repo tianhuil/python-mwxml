@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import logging
 
 import mwtypes.files
@@ -9,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def map(process, paths, threads=None):
-    """
+    u"""
     Implements a distributed stategy for processing XML files.  This
     function constructs a set of py:mod:`multiprocessing` threads (spread over
     multiple cores) and uses an internal queue to aggregate outputs.  To use

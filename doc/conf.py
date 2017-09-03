@@ -13,10 +13,11 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+from __future__ import absolute_import
 import sys
 import os
 
-sys.path.insert(0, "..")
+sys.path.insert(0, u"..")
 
 import mwxml
 
@@ -34,31 +35,31 @@ import mwxml
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.doctest',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.todo',
-    'sphinx.ext.coverage',
-    'sphinx.ext.mathjax',
-    'sphinx.ext.ifconfig',
-    'sphinx.ext.viewcode',
+    u'sphinx.ext.autodoc',
+    u'sphinx.ext.doctest',
+    u'sphinx.ext.intersphinx',
+    u'sphinx.ext.todo',
+    u'sphinx.ext.coverage',
+    u'sphinx.ext.mathjax',
+    u'sphinx.ext.ifconfig',
+    u'sphinx.ext.viewcode',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = [u'_templates']
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = u'.rst'
 
 # The encoding of source files.
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = u'index'
 
 # General information about the project.
-project = 'mwxml'
-copyright = '2015, Aaron Halfaker'
+project = u'mwxml'
+copyright = u'2015, Aaron Halfaker'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -81,7 +82,7 @@ release = mwxml.__version__
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build']
+exclude_patterns = [u'_build']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -99,7 +100,7 @@ exclude_patterns = ['_build']
 #show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = u'sphinx'
 
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
@@ -112,7 +113,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'alabaster'
+html_theme = u'alabaster'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -141,7 +142,7 @@ html_theme = 'alabaster'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = [u'_static']
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
@@ -190,7 +191,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'mwxmldoc'
+htmlhelp_basename = u'mwxmldoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -210,8 +211,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'mwxml.tex', 'mwxml Documentation',
-   'Aaron Halfaker', 'manual'),
+  (u'index', u'mwxml.tex', u'mwxml Documentation',
+   u'Aaron Halfaker', u'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -240,8 +241,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'mwxml', 'mwxml Documentation',
-     ['Aaron Halfaker'], 1)
+    (u'index', u'mwxml', u'mwxml Documentation',
+     [u'Aaron Halfaker'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -254,9 +255,9 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'mwxml', 'mwxml Documentation',
-   'Aaron Halfaker', 'mwxml', 'One line description of project.',
-   'Miscellaneous'),
+  (u'index', u'mwxml', u'mwxml Documentation',
+   u'Aaron Halfaker', u'mwxml', u'One line description of project.',
+   u'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.
@@ -274,6 +275,6 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    'http://docs.python.org/': None, 
-    'https://pythonhosted.org/mwtypes/': None
+    u'http://docs.python.org/': None, 
+    u'https://pythonhosted.org/mwtypes/': None
 }

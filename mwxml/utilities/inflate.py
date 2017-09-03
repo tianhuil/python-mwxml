@@ -1,4 +1,4 @@
-r"""
+ur"""
 ``$ mwxml inflate -h``
 ::
 
@@ -24,6 +24,7 @@ r"""
                             mess when running multi-threaded.
         --debug             Print debug logs.
 """
+from __future__ import absolute_import
 import sys
 import mwcli
 
@@ -33,7 +34,7 @@ def _single_inflate(flat_json):
     flat_keys = flat_json.keys()
     for key in flat_keys:
         bottom_dict = inflated
-        parts = key.split('_')
+        parts = key.split(u'_')
         for sub_key in parts[:-1]:
             if sub_key not in bottom_dict:
                 bottom_dict[sub_key] = {}

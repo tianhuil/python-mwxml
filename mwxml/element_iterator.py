@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import io
 from xml.etree.ElementTree import ParseError
 
@@ -10,26 +11,26 @@ except ImportError:
 
 
 def trim_ns(tag):
-    return tag[tag.find("}") + 1:]
+    return tag[tag.find(u"}") + 1:]
 
 
-class EventPointer:
+class EventPointer(object):
     def __init__(self, etree_events):
         self.tag_stack = []
         self.etree_events = etree_events
 
-    def __next__(self):
-        event, element = next(self.etree_events)
+    def next(self):
+        event, element = self.etree_events.next()
 
         tag = trim_ns(element.tag)
 
-        if event == "start":
+        if event == u"start":
             self.tag_stack.append(tag)
         else:
             if self.tag_stack[-1] == tag:
                 self.tag_stack.pop()
             else:
-                raise MalformedXML("Expected {0}, but saw {1}.".format(
+                raise MalformedXML(u"Expected {0}, but saw {1}.".format(
                     self.tag_stack[-1],
                     tag)
                 )
@@ -41,10 +42,10 @@ class EventPointer:
 
     @classmethod
     def from_file(cls, f):
-        return EventPointer(etree.iterparse(f, events=("start", "end")))
+        return EventPointer(etree.iterparse(f, events=(u"start", u"end")))
 
 
-class ElementIterator:
+class ElementIterator(object):
     def __init__(self, element, pointer):
         self.pointer = pointer
         self.element = element
@@ -55,9 +56,9 @@ class ElementIterator:
     def __iter__(self):
 
         while not self.done and self.pointer.depth() > self.depth:
-            event, element = next(self.pointer)
+            event, element = self.pointer.next()
 
-            if event == "start":
+            if event == u"start":
                 sub_iterator = ElementIterator(element, self.pointer)
 
                 yield sub_iterator
@@ -69,7 +70,7 @@ class ElementIterator:
     def complete(self):
 
         while not self.done and self.pointer.depth() > self.depth:
-            event, element = next(self.pointer)
+            event, element = self.pointer.next()
             if self.pointer.depth() > self.depth:
                 element.clear()
 
@@ -83,13 +84,13 @@ class ElementIterator:
         return self.element.attrib.get(key, alt)
 
     def __getattr__(self, attr):
-        if attr == "tag":
+        if attr == u"tag":
             return trim_ns(self.element.tag)
-        elif attr == "text":
+        elif attr == u"text":
             self.complete()
             return self.element.text
         else:
-            raise AttributeError("{0} has no attribute {1}"
+            raise AttributeError(u"{0} has no attribute {1}"
                                  .format(self.__class__.__name__, attr))
 
     @classmethod
@@ -97,11 +98,11 @@ class ElementIterator:
 
         try:
             pointer = EventPointer.from_file(f)
-            event, element = next(pointer)
+            event, element = pointer.next()
             return cls(element, pointer)
-        except ParseError as e:
-            raise ParseError("{0}: {1}..."
-                             .format(str(e),
+        except ParseError, e:
+            raise ParseError(u"{0}: {1}..."
+                             .format(unicode(e),
                                      f.read(500)))
 
     @classmethod

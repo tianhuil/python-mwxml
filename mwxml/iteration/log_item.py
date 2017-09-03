@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import logging
 
 import mwtypes
@@ -10,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class LogItem(mwtypes.LogItem):
-    """
+    u"""
     LogItem meta data. See :class:`mwtypes.LogItem`
     for a description of fields.
 
@@ -38,19 +39,19 @@ class LogItem(mwtypes.LogItem):
 
         for sub_element in element:
             tag = sub_element.tag
-            if tag == "id":
+            if tag == u"id":
                 id = int(sub_element.text)
-            elif tag == "timestamp":
+            elif tag == u"timestamp":
                 timestamp = mwtypes.Timestamp(sub_element.text)
-            elif tag == "comment":
-                comment_deleted = sub_element.attr('deleted') is not None
+            elif tag == u"comment":
+                comment_deleted = sub_element.attr(u'deleted') is not None
                 if not comment_deleted:
                     comment = sub_element.text
-            elif tag == "contributor":
-                user_deleted = sub_element.attr('deleted') is not None
+            elif tag == u"contributor":
+                user_deleted = sub_element.attr(u'deleted') is not None
                 if not user_deleted:
                     user = User.from_element(sub_element)
-            elif tag == "logtitle":
+            elif tag == u"logtitle":
                 if sub_element.text is None:
                     namespace = None
                     title = None
@@ -61,17 +62,17 @@ class LogItem(mwtypes.LogItem):
                     namespace = None
                     title = element.text
                 page = cls.Page(namespace=namespace, title=title)
-            elif tag == "type":
+            elif tag == u"type":
                 type = sub_element.text
-            elif tag == "action":
+            elif tag == u"action":
                 action = sub_element.text
-            elif tag == "text":
-                logger.warn("A <text> tag was seen in a log item ... ignoring")
-            elif tag == "params":
+            elif tag == u"text":
+                logger.warn(u"A <text> tag was seen in a log item ... ignoring")
+            elif tag == u"params":
                 params = sub_element.text
             else:
-                raise MalformedXML("Unexpected tag found when processing " +
-                                   "a <logitem>: '{0}'".format(tag))
+                raise MalformedXML(u"Unexpected tag found when processing " +
+                                   u"a <logitem>: '{0}'".format(tag))
 
         deleted = cls.Deleted(comment=comment_deleted, user=user_deleted)
 

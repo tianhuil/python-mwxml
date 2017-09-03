@@ -1,4 +1,4 @@
-"""
+u"""
 Validates a stream of JSON revsion documents against a JSON schema and writes
 them to stdout if they validate -- otherwise, complains noisily.
 
@@ -22,14 +22,16 @@ Options:
                         mess when running multi-threaded.
     --debug             Print debug logs.
 """
+from __future__ import absolute_import
 import json
 
 import jsonschema
 import mwcli
+from io import open
 
 
 def process_args(args):
-    return {'schema': json.load(open(args['--schema']))}
+    return {u'schema': json.load(open(args[u'--schema']))}
 
 
 def validate(docs, schema, verbose=False):

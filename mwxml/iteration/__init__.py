@@ -1,4 +1,4 @@
-"""
+u"""
 These classes form the basis of iterative processing of XML dumps.  These
 datatypes are based on those found in http://pythonhosted.org/mwtypes
 
@@ -20,6 +20,7 @@ datatypes are based on those found in http://pythonhosted.org/mwtypes
     :inherited-members:
 
 """
+from __future__ import absolute_import
 from .dump import Dump
 from .page import Page
 from .log_item import LogItem

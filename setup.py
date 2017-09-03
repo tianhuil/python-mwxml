@@ -1,10 +1,12 @@
+from __future__ import absolute_import
 import os
 from distutils.core import setup
 
 from setuptools import find_packages
+from io import open
 
-about_path = os.path.join(os.path.dirname(__file__), "mwxml/about.py")
-exec(compile(open(about_path).read(), about_path, "exec"))
+about_path = os.path.join(os.path.dirname(__file__), u"mwxml/about.py")
+exec(compile(open(about_path).read(), about_path, u"exec"))
 
 
 def requirements(fname):
@@ -21,25 +23,25 @@ setup(
     license=__license__,  # noqa
     packages=find_packages(),
     entry_points={
-        'console_scripts': [
-            'mwxml=mwxml.mwxml:main'
+        u'console_scripts': [
+            u'mwxml=mwxml.mwxml:main'
         ],
     },
-    long_description=open('README.md').read(),
-    install_requires=requirements("requirements.txt"),
-    test_suite='nose.collector',
+    long_description=open(u'README.md').read(),
+    install_requires=requirements(u"requirements.txt"),
+    test_suite=u'nose.collector',
     classifiers=[
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3 :: Only",
-        "Environment :: Other Environment",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
-        "Topic :: Software Development :: Libraries :: Python Modules",
-        "Topic :: Text Processing :: Linguistic",
-        "Topic :: Text Processing :: General",
-        "Topic :: Utilities",
-        "Topic :: Scientific/Engineering"
+        u"Programming Language :: Python",
+        u"Programming Language :: Python :: 3",
+        u"Programming Language :: Python :: 3 :: Only",
+        u"Environment :: Other Environment",
+        u"Intended Audience :: Developers",
+        u"License :: OSI Approved :: MIT License",
+        u"Operating System :: OS Independent",
+        u"Topic :: Software Development :: Libraries :: Python Modules",
+        u"Topic :: Text Processing :: Linguistic",
+        u"Topic :: Text Processing :: General",
+        u"Topic :: Utilities",
+        u"Topic :: Scientific/Engineering"
     ],
 )

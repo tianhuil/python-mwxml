@@ -1,11 +1,13 @@
+from __future__ import absolute_import
 import io
 
 from nose.tools import eq_, raises
 
 from ..map import map
+from itertools import imap
 
 
-SAMPLE_XML = """
+SAMPLE_XML = u"""
 <mediawiki xmlns="http://www.mediawiki.org/xml/export-0.8/"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.8/
@@ -52,12 +54,12 @@ def test_map():
     def process_dump(dump, path):
         for page in dump:
             revisions = sum(1 for rev in page)
-            yield {'page_id': page.id, 'revisions': revisions}
+            yield {u'page_id': page.id, u'revisions': revisions}
 
     pages = 0
-    for doc in map(process_dump, [f]):
-        page_id = doc['page_id']
-        revisions = doc['revisions']
+    for doc in imap(process_dump, [f]):
+        page_id = doc[u'page_id']
+        revisions = doc[u'revisions']
         if page_id == 1:
             eq_(revisions, 2)
         elif page_id == 2:
@@ -78,10 +80,10 @@ def test_map_error():
         for page in dump:
 
             if page.id == 2:
-                raise TypeError("Fake error")
+                raise TypeError(u"Fake error")
 
-    for doc in map([f], process_dump):
-        assert 'page_id' in doc
+    for doc in imap([f], process_dump):
+        assert u'page_id' in doc
 
 
 def test_map_error_handler():
@@ -95,14 +97,14 @@ def test_map_error_handler():
                 count += 1
 
             if count > 2:
-                raise TypeError("Fake type error.")
+                raise TypeError(u"Fake type error.")
 
-            yield {'page_id': page.id, 'revisions': count}
+            yield {u'page_id': page.id, u'revisions': count}
 
     pages = 0
-    for doc in map(process_dump, [f]):
-        page_id = doc['page_id']
-        revisions = doc['revisions']
+    for doc in imap(process_dump, [f]):
+        page_id = doc[u'page_id']
+        revisions = doc[u'revisions']
         if page_id == 1:
             eq_(revisions, 2)
         elif page_id == 2:
@@ -117,7 +119,7 @@ def test_map_error_handler():
 
 @raises(ValueError)
 def test_complex_error_handler():
-    f_clean = io.StringIO("""
+    f_clean = io.StringIO(u"""
         <mediawiki xmlns="http://www.mediawiki.org/xml/export-0.8/"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.8/
@@ -148,7 +150,7 @@ def test_complex_error_handler():
           </page>
         </mediawiki>
     """)
-    f_messy = io.StringIO("""
+    f_messy = io.StringIO(u"""
         <mediawiki xmlns="http://www.mediawiki.org/xml/export-0.8/"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.8/
@@ -185,5 +187,5 @@ def test_complex_error_handler():
             for revision in page:
                 yield revision
 
-    for rev in map(process_dump, [f_messy, f_clean], threads=1):
-        print(rev.to_json())
+    for rev in imap(process_dump, [f_messy, f_clean], threads=1):
+        print rev.to_json()

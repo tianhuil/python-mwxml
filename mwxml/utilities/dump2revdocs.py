@@ -1,4 +1,4 @@
-r"""
+ur"""
 ``$ mwxml dump2revdocs -h``
 ::
 
@@ -24,6 +24,7 @@ r"""
                             mess when running multi-threaded.
         --debug             Print debug logs.
 """
+from __future__ import absolute_import
 import sys
 
 import mwcli
@@ -35,18 +36,18 @@ def dump2revdocs(dump, verbose=False):
     for page in dump:
 
         if verbose:
-            sys.stderr.write(page.title + ": ")
+            sys.stderr.write(page.title + u": ")
             sys.stderr.flush()
 
         for revision in page:
             yield revision.to_json()
 
             if verbose:
-                sys.stderr.write(".")
+                sys.stderr.write(u".")
                 sys.stderr.flush()
 
         if verbose:
-            sys.stderr.write("\n")
+            sys.stderr.write(u"\n")
             sys.stderr.flush()
 
 

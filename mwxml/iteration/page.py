@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import logging
 
 import mwtypes
@@ -9,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class Page(mwtypes.Page):
-    """
+    u"""
     Page meta data and a :class:`~mwxml.Revision` iterator.  Instances of
     this class can be called as iterators directly. See :class:`mwtypes.Page`
     for a description of fields.
@@ -22,8 +23,10 @@ class Page(mwtypes.Page):
             for revision in page:
                 print("{0} {1}".format(revision.id, page.id))
     """
-    def initialize(self, *args, revisions=None, **kwargs):
-        super().initialize(*args, **kwargs)
+    def initialize(self, *args, **kwargs):
+        if 'revisions' in kwargs: revisions = kwargs['revisions']; del kwargs['revisions']
+        else: revisions = None
+        super(Page, self).initialize(*args, **kwargs)
 
         # Should be a lazy generator
         self.__revisions = revisions
@@ -33,8 +36,8 @@ class Page(mwtypes.Page):
             revision.page = self
             yield revision
 
-    def __next__(self):
-        revision = next(self.__revisions)
+    def next(self):
+        revision = self.__revisions.next()
         revision.page = self
         return revision
 
@@ -46,11 +49,11 @@ class Page(mwtypes.Page):
         for sub_element in element:
             tag = sub_element.tag
 
-            if tag == "revision":
+            if tag == u"revision":
                 yield Revision.from_element(sub_element)
             else:
-                raise MalformedXML("Expected to see <revision>.  " +
-                                   "Instead saw <{0}>".format(tag))
+                raise MalformedXML(u"Expected to see <revision>.  " +
+                                   u"Instead saw <{0}>".format(tag))
 
     @classmethod
     def from_element(cls, element, namespace_map=None):
@@ -66,28 +69,28 @@ class Page(mwtypes.Page):
         # signal the start of revision data
         for sub_element in element:
             tag = sub_element.tag
-            if tag == "title":
+            if tag == u"title":
                 page_name = sub_element.text
-            elif tag == "ns":
+            elif tag == u"ns":
                 namespace = int(sub_element.text)
-            elif tag == "id":
+            elif tag == u"id":
                 id = int(sub_element.text)
-            elif tag == "redirect":
-                redirect = sub_element.attr('title')
-            elif tag == "restrictions":
+            elif tag == u"redirect":
+                redirect = sub_element.attr(u'title')
+            elif tag == u"restrictions":
                 restrictions.append(sub_element.text)
-            elif tag == "revision":
+            elif tag == u"revision":
                 first_revision = sub_element
                 break
             # Assuming that the first revision seen marks the end of page
             # metadata.  I'm not too keen on this assumption, so I'm leaving
             # this long comment to warn whoever ends up maintaining this.
-            elif tag == "DiscussionThreading":
+            elif tag == u"DiscussionThreading":
                 logger.warning(
-                    "Encountered <DiscussionThreading> and skipping it ...")
+                    u"Encountered <DiscussionThreading> and skipping it ...")
             else:
-                raise MalformedXML("Unexpected tag found when processing " +
-                                   "a <page>: '{0}'".format(tag))
+                raise MalformedXML(u"Unexpected tag found when processing " +
+                                   u"a <page>: '{0}'".format(tag))
 
         # Assuming that I got here by seeing a <revision> tag.  See verbose
         # comment above.
@@ -96,10 +99,10 @@ class Page(mwtypes.Page):
         # Normalize title and extract namespace
         mapped_namespace, title = extract_namespace(page_name, namespace_map)
         if namespace is not None and mapped_namespace != namespace:
-            logger.warn("Namespace id conflict detected.  " +
-                        "<title>={0}, ".format(page_name) +
-                        "<namespace>={0}, ".format(namespace) +
-                        "mapped_namespace={0}".format(mapped_namespace))
+            logger.warn(u"Namespace id conflict detected.  " +
+                        u"<title>={0}, ".format(page_name) +
+                        u"<namespace>={0}, ".format(namespace) +
+                        u"mapped_namespace={0}".format(mapped_namespace))
 
         namespace = namespace or mapped_namespace
 
@@ -109,11 +112,11 @@ class Page(mwtypes.Page):
 
 
 def normalize_title(title):
-    return title.replace("_", " ")
+    return title.replace(u"_", u" ")
 
 
 def extract_namespace(page_name, namespace_map):
-    title_parts = page_name.split(":", 1)
+    title_parts = page_name.split(u":", 1)
     if len(title_parts) == 1:
         return 0, normalize_title(page_name)
     else:

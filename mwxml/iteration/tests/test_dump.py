@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import io
 
 import mwtypes
@@ -8,7 +9,7 @@ from ..page import Page
 from ..revision import Revision
 
 
-SAMPLE_XML = """
+SAMPLE_XML = u"""
 <mediawiki xmlns="http://www.mediawiki.org/xml/export-0.8/"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.8/
@@ -61,38 +62,38 @@ def test_complete():
     dump = Dump.from_file(f)
     eq_([0, 1], list(ns.id for ns in dump.site_info.namespaces))
 
-    page = next(dump)
-    eq_(page.title, "Foo")
+    page = dump.next()
+    eq_(page.title, u"Foo")
     eq_(page.namespace, 0)
     eq_(page.id, 1)
     eq_(page.redirect, None)
     eq_(page.restrictions, [])
 
-    revision = next(page)
+    revision = page.next()
     eq_(revision.id, 1)
-    eq_(revision.timestamp, mwtypes.Timestamp("2004-08-09T09:04:08Z"))
+    eq_(revision.timestamp, mwtypes.Timestamp(u"2004-08-09T09:04:08Z"))
 
-    revision = next(page)
+    revision = page.next()
     eq_(revision.id, 2)
-    eq_(revision.timestamp, mwtypes.Timestamp("2004-08-10T09:04:08Z"))
+    eq_(revision.timestamp, mwtypes.Timestamp(u"2004-08-10T09:04:08Z"))
 
-    page = next(dump)
+    page = dump.next()
     assert_is_instance(page, Page)
-    eq_(page.title, "Bar")
+    eq_(page.title, u"Bar")
     eq_(page.namespace, 1)
     eq_(page.id, 2)
-    eq_(page.redirect, "Computer accessibility")
-    eq_(page.restrictions, ["edit=sysop:move=sysop"])
+    eq_(page.redirect, u"Computer accessibility")
+    eq_(page.restrictions, [u"edit=sysop:move=sysop"])
 
-    revision = next(page)
+    revision = page.next()
     assert_is_instance(revision, Revision)
     eq_(revision.id, 3)
-    eq_(revision.timestamp, mwtypes.Timestamp("2004-08-11T09:04:08Z"))
+    eq_(revision.timestamp, mwtypes.Timestamp(u"2004-08-11T09:04:08Z"))
 
-    revision = next(page)
+    revision = page.next()
     assert_is_instance(revision, Revision)
     eq_(revision.id, 4)
-    eq_(revision.timestamp, mwtypes.Timestamp("2004-08-12T09:04:08Z"))
+    eq_(revision.timestamp, mwtypes.Timestamp(u"2004-08-12T09:04:08Z"))
 
 
 def test_skipping():
@@ -100,23 +101,23 @@ def test_skipping():
 
     dump = Dump.from_file(f)
 
-    page = next(dump)
-    eq_(page.title, "Foo")
+    page = dump.next()
+    eq_(page.title, u"Foo")
     eq_(page.namespace, 0)
     eq_(page.id, 1)
 
-    page = next(dump)
-    eq_(page.title, "Bar")
+    page = dump.next()
+    eq_(page.title, u"Bar")
     eq_(page.namespace, 1)
     eq_(page.id, 2)
 
-    revision = next(page)
+    revision = page.next()
     eq_(revision.id, 3)
-    eq_(revision.timestamp, mwtypes.Timestamp("2004-08-11T09:04:08Z"))
+    eq_(revision.timestamp, mwtypes.Timestamp(u"2004-08-11T09:04:08Z"))
 
 
 def test_from_page_xml():
-    page_xml = """
+    page_xml = u"""
     <page>
       <title>Foo</title>
       <ns>0</ns>
@@ -137,21 +138,21 @@ def test_from_page_xml():
     # You have a `namespaces`, but it's empty.
     eq_(dump.site_info.namespaces, None)
 
-    page = next(dump)
-    eq_(page.title, "Foo")
+    page = dump.next()
+    eq_(page.title, u"Foo")
     eq_(page.namespace, 0)
     eq_(page.id, 1)
 
-    revision = next(page)
+    revision = page.next()
     eq_(revision.id, 1)
-    eq_(revision.timestamp, mwtypes.Timestamp("2004-08-09T09:04:08Z"))
+    eq_(revision.timestamp, mwtypes.Timestamp(u"2004-08-09T09:04:08Z"))
 
-    revision = next(page)
+    revision = page.next()
     eq_(revision.id, 2)
-    eq_(revision.timestamp, mwtypes.Timestamp("2004-08-10T09:04:08Z"))
+    eq_(revision.timestamp, mwtypes.Timestamp(u"2004-08-10T09:04:08Z"))
 
 
-OLD_XML = """
+OLD_XML = u"""
 <mediawiki xmlns="http://www.mediawiki.org/xml/export-0.8/"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.8/
@@ -187,12 +188,12 @@ def test_old_dump():
 
     dump = Dump.from_file(f)
 
-    page = next(dump)
+    page = dump.next()
 
     eq_(page.namespace, 1)
 
 
-LOG_XML = """
+LOG_XML = u"""
 <mediawiki xmlns="http://www.mediawiki.org/xml/export-0.8/"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.8/
@@ -242,8 +243,8 @@ def test_log_dump():
 
     dump = Dump.from_file(f)
 
-    log_item = next(dump)
+    log_item = dump.next()
     eq_(log_item.id, 1)
 
-    log_item = next(dump)
+    log_item = dump.next()
     eq_(log_item.id, 2)
